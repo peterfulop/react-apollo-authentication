@@ -1,0 +1,48 @@
+{
+  "name": "react-apollo-server",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "dev": "npx nodemon",
+    "migrate:dev": "npx prisma migrate dev",
+    "codegen:gql": "graphql-codegen --require dotenv/config --config codegen.yml dotenv_config_path=.env"
+  },
+  "devDependencies": {
+    "@graphql-codegen/add": "^3.2.1",
+    "@graphql-codegen/cli": "^2.13.12",
+    "@graphql-codegen/near-operation-file-preset": "^2.4.4",
+    "@graphql-codegen/typescript": "^2.8.2",
+    "@graphql-codegen/typescript-operations": "^2.5.7",
+    "@graphql-codegen/typescript-react-apollo": "^3.3.6",
+    "@graphql-codegen/typescript-resolvers": "^2.7.7",
+    "@swc/cli": "^0.1.57",
+    "@swc/core": "^1.3.14",
+    "@types/bcrypt": "^5.0.0",
+    "@types/convict": "^6.1.1",
+    "@types/cors": "^2.8.13",
+    "@types/node": "^18.11.18",
+    "@types/nodemailer": "^6.4.7",
+    "@types/pg": "^8.6.6",
+    "@types/uuid": "^9.0.0",
+    "nodemon": "^2.0.20",
+    "ts-node": "^10.9.1",
+    "typescript": "^4.9.4"
+  },
+  "dependencies": {
+    "@apollo/server": "^4.3.1",
+    "@prisma/client": "^4.9.0",
+    "bcrypt": "^5.1.0",
+    "cloudinary": "^1.33.0",
+    "convict": "^6.2.4",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.3",
+    "email-validator": "^2.0.4",
+    "graphql": "^16.6.0",
+    "graphql-tools": "^8.3.15",
+    "nodemailer": "^6.9.1",
+    "pg": "^8.8.0",
+    "prisma": "^4.9.0",
+    "uuid": "^9.0.0"
+  }
+}

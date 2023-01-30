@@ -1,0 +1,49 @@
+mutation Signup($input: SignupInput!) {
+  signup(input: $input) {
+    userErrors {
+      message
+      values
+    }
+    success
+  }
+}
+
+mutation ConfirmUser($confirmUserToken: String!) {
+  confirmUser(token: $confirmUserToken) {
+    userErrors {
+      message
+      values
+    }
+    token
+    user {
+      id
+      email
+      name
+    }
+  }
+}
+
+mutation ConfirmResend($email: String!) {
+  confirmResend(email: $email) {
+    userErrors {
+      message
+      values
+    }
+    success
+  }
+}
+
+mutation Signin($signinInput: CredentialsInput!) {
+  signin(input: $signinInput) {
+    userErrors {
+      message
+      values
+    }
+    token
+    user {
+      id
+      email
+      name
+    }
+  }
+}
