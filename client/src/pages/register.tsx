@@ -2,12 +2,12 @@ import { Alert, Button, Container, TextField } from '@mui/material';
 import { Stack } from '@mui/system';
 import { FC, useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import UserContext from '../context/user-context';
+import { AuthContext } from '../context/auth-context';
 import { useSignupMutation } from '../graphql/auth/auth.generated';
 import { useForm } from '../hooks/use-forms.hook';
 
 export const RegisterPage: FC = () => {
-  const userContext = useContext(UserContext);
+  const userContext = useContext(AuthContext);
   const navigate = useNavigate();
   const [success, setSuccess] = useState<boolean>(false);
 

@@ -2,14 +2,14 @@ import { Alert, Button, Container, Stack, TextField } from '@mui/material';
 import { FC, useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { RoutePath } from '../config/routes';
-import UserContext from '../context/user-context';
+import { AuthContext } from '../context/auth-context';
 import { useSigninMutation } from '../graphql/auth/auth.generated';
 import { useForm } from '../hooks/use-forms.hook';
 
 interface ILoginpage {}
 
 export const LoginPage: FC<ILoginpage> = () => {
-  const userContext = useContext(UserContext);
+  const userContext = useContext(AuthContext);
   const navigate = useNavigate();
 
   const signinInputs = {
@@ -26,7 +26,8 @@ export const LoginPage: FC<ILoginpage> = () => {
     }
     if (res.data?.signin.token && res.data.signin.user) {
       const { token, user } = res.data.signin;
-      userContext.userDispatch({ type: 'LOGIN', payload: { token, user } });
+      // userContext.userDispatch({ type: 'LOGIN', payload: { token, user } });
+      userContext.login({ token });
       navigate(RoutePath.PROFILE);
     }
   };

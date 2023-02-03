@@ -3,11 +3,11 @@ import { Stack } from '@mui/system';
 import { FC, useContext, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { RoutePath } from '../config/routes';
-import UserContext from '../context/user-context';
+import { AuthContext } from '../context/auth-context';
 import { useConfirmUserMutation } from '../graphql/auth/auth.generated';
 
 export const UserConfirmPage: FC = () => {
-  const userContext = useContext(UserContext);
+  const userContext = useContext(AuthContext);
   const navigate = useNavigate();
   const { token } = useParams();
 
@@ -21,7 +21,7 @@ export const UserConfirmPage: FC = () => {
       return setErrors([errorMessage]);
     } else if (res.data?.confirmUser.user && res.data.confirmUser.token) {
       const { token, user } = res.data.confirmUser;
-      userContext.userDispatch({ type: 'LOGIN', payload: { user, token } });
+      userContext.login({ token });
       navigate(RoutePath.PROFILE);
     }
   };

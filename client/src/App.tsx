@@ -1,123 +1,110 @@
-import { FC, useEffect, useReducer, useState } from 'react';
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { FC, useContext, useEffect, useState } from 'react';
+import { Route, Routes } from 'react-router-dom';
 import { AuthRoute } from './components/auth-route/auth-route';
 import { Navbar } from './components/navbar/navbar';
 import routes from './config/routes';
-import {
-  UserContextProvider,
-  initialUserState,
-  userReducer,
-} from './context/user-context';
-import { useConfirmUserMutation } from './graphql/auth/auth.generated';
+import { AuthContext, AuthProvider } from './context/auth-context';
+import { Validate } from './modules/validate';
 export interface IApplicationProps {}
 
 export const App: FC<IApplicationProps> = (props) => {
-  const [userState, userDispatch] = useReducer(userReducer, initialUserState);
+  // const [userState, userDispatch] = useReducer(userReducer, initialUserState);
   const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string[]>([]);
 
-  const [confirmUser] = useConfirmUserMutation();
+  const authContext = useContext(AuthContext);
 
   useEffect(() => {
-    0;
     const checkLocalStorageForCredentials = async () => {
+      setLoading(false);
       const token = localStorage.getItem('token');
       if (token === null) {
-        userDispatch({
-          type: 'LOGOUT',
-          payload: initialUserState,
-        });
-        setLoading(false);
+        authContext.logout();
       } else {
-        console.log('Validate token on the server...', token);
-        const res = await confirmUser({
-          onError() {
-            setError((prevState) => {
-              return prevState;
-            });
-          },
-          variables: {
-            confirmUserToken: localStorage.getItem('token') || '',
+        console.log('Validate token on the server...');
+        return Validate({
+          token,
+          callback: (error, user) => {
+            if (error) {
+              authContext.logout();
+            } else if (user) {
+              authContext.login(token);
+              setLoading(false);
+            }
           },
         });
-        if (!res.data?.confirmUser.token) {
-          userDispatch({
-            type: 'LOGOUT',
-            payload: initialUserState,
-          });
-        }
-
-        if (res.data?.confirmUser.userErrors.length) {
-          const errorMessage = res.data?.confirmUser.userErrors[0].message;
-          return setError([errorMessage]);
-        } else if (res.data?.confirmUser.user && res.data.confirmUser.token) {
-          const { token, user } = res.data.confirmUser;
-          userDispatch({ type: 'LOGIN', payload: { user, token } });
-          setTimeout(() => {
-            setLoading(false);
-          }, 1000);
-        }
       }
     };
     checkLocalStorageForCredentials();
   }, []);
 
-  // const CheckLocalStorageForCredentials = async () => {
+  // const checkLocalStorageForCredentials = async () => {
+  //   setLoading(false);
   //   const token = localStorage.getItem('token');
   //   if (token === null) {
   //     userDispatch({
   //       type: 'LOGOUT',
   //       payload: initialUserState,
   //     });
-  //     setLoading(false);
   //   } else {
-  //     console.log('Validate token on the server...', token);
-  //     const res = await confirmUser();
-  //     if (res.data?.confirmUser.userErrors.length) {
-  //       const errorMessage = res.data?.confirmUser.userErrors[0].message;
-  //       return setError([errorMessage]);
-  //     } else if (res.data?.confirmUser.user && res.data.confirmUser.token) {
-  //       const { token, user } = res.data.confirmUser;
-  //       userDispatch({ type: 'LOGIN', payload: { user, token } });
-  //       setLoading(false);
-  //     }
+  //     console.log('Validate token on the server...');
+  //     return Validate({
+  //       token,
+  //       callback: (error, user) => {
+  //         if (error) {
+  //           console.log('error', error);
+  //           userDispatch({
+  //             type: 'LOGOUT',
+  //             payload: initialUserState,
+  //           });
+  //         } else if (user) {
+  //           userDispatch({
+  //             type: 'LOGIN',
+  //             payload: { user, token },
+  //           });
+  //           setLoading(false);
+  //         }
+  //       },
+  //     });
   //   }
   // };
 
-  const userContextValues = {
-    userState,
-    userDispatch,
-  };
+  // const userContextValues = {
+  //   userState,
+  //   userDispatch,
+  // };
+
+  if (loading) {
+    return <div>loading...</div>;
+  }
 
   return (
-    <UserContextProvider value={userContextValues}>
-      <BrowserRouter>
-        <Navbar />
-        <Routes>
-          {routes.map((route, index) => {
-            {
-              return route.auth ? (
-                <Route
-                  key={index}
-                  path={route.path}
-                  element={
-                    <AuthRoute>
-                      <route.component />
-                    </AuthRoute>
-                  }
-                />
-              ) : (
-                <Route
-                  key={index}
-                  path={route.path}
-                  element={<route.component />}
-                />
-              );
-            }
-          })}
-        </Routes>
-      </BrowserRouter>
-    </UserContextProvider>
+    <AuthProvider>
+      <Navbar />
+      <Routes>
+        {routes.map((route, index) => {
+          if (route.auth) {
+            return (
+              <Route
+                key={index}
+                path={route.path}
+                element={
+                  <AuthRoute>
+                    <route.component />
+                  </AuthRoute>
+                }
+              />
+            );
+          }
+          return (
+            <Route
+              key={index}
+              path={route.path}
+              element={<route.component />}
+            />
+          );
+        })}
+      </Routes>
+    </AuthProvider>
   );
 };
 

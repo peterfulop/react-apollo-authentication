@@ -1,50 +1,104 @@
 /* eslint-disable */
 import * as Types from '../../apollo/graphql-generated/types';
 
-import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
+import { gql } from '@apollo/client';
 const defaultOptions = {} as const;
 export type SignupMutationVariables = Types.Exact<{
   input: Types.SignupInput;
 }>;
 
-
-export type SignupMutation = { __typename?: 'Mutation', signup: { __typename?: 'AuthPayload', success?: boolean | null, userErrors: Array<{ __typename?: 'UserError', message: string, values?: Array<string | null> | null }> } };
+export type SignupMutation = {
+  __typename?: 'Mutation';
+  signup: {
+    __typename?: 'AuthPayload';
+    success?: boolean | null;
+    userErrors: Array<{
+      __typename?: 'UserError';
+      message: string;
+      values?: Array<string | null> | null;
+    }>;
+  };
+};
 
 export type ConfirmUserMutationVariables = Types.Exact<{
   confirmUserToken: Types.Scalars['String'];
 }>;
 
-
-export type ConfirmUserMutation = { __typename?: 'Mutation', confirmUser: { __typename?: 'ConfirmPayload', token?: string | null, userErrors: Array<{ __typename?: 'UserError', message: string, values?: Array<string | null> | null }>, user?: { __typename?: 'User', id: string, email: string, name: string } | null } };
+export type ConfirmUserMutation = {
+  __typename?: 'Mutation';
+  confirmUser: {
+    __typename?: 'ConfirmPayload';
+    token?: string | null;
+    userErrors: Array<{
+      __typename?: 'UserError';
+      message: string;
+      values?: Array<string | null> | null;
+    }>;
+    user?: {
+      __typename?: 'User';
+      id: string;
+      email: string;
+      name: string;
+    } | null;
+  };
+};
 
 export type ConfirmResendMutationVariables = Types.Exact<{
   email: Types.Scalars['String'];
 }>;
 
-
-export type ConfirmResendMutation = { __typename?: 'Mutation', confirmResend: { __typename?: 'AuthPayload', success?: boolean | null, userErrors: Array<{ __typename?: 'UserError', message: string, values?: Array<string | null> | null }> } };
+export type ConfirmResendMutation = {
+  __typename?: 'Mutation';
+  confirmResend: {
+    __typename?: 'AuthPayload';
+    success?: boolean | null;
+    userErrors: Array<{
+      __typename?: 'UserError';
+      message: string;
+      values?: Array<string | null> | null;
+    }>;
+  };
+};
 
 export type SigninMutationVariables = Types.Exact<{
   signinInput: Types.CredentialsInput;
 }>;
 
-
-export type SigninMutation = { __typename?: 'Mutation', signin: { __typename?: 'ConfirmPayload', token?: string | null, userErrors: Array<{ __typename?: 'UserError', message: string, values?: Array<string | null> | null }>, user?: { __typename?: 'User', id: string, email: string, name: string } | null } };
-
+export type SigninMutation = {
+  __typename?: 'Mutation';
+  signin: {
+    __typename?: 'ConfirmPayload';
+    token?: string | null;
+    userErrors: Array<{
+      __typename?: 'UserError';
+      message: string;
+      values?: Array<string | null> | null;
+    }>;
+    user?: {
+      __typename?: 'User';
+      id: string;
+      email: string;
+      name: string;
+    } | null;
+  };
+};
 
 export const SignupDocument = gql`
-    mutation Signup($input: SignupInput!) {
-  signup(input: $input) {
-    userErrors {
-      message
-      values
+  mutation Signup($input: SignupInput!) {
+    signup(input: $input) {
+      userErrors {
+        message
+        values
+      }
+      success
     }
-    success
   }
-}
-    `;
-export type SignupMutationFn = Apollo.MutationFunction<SignupMutation, SignupMutationVariables>;
+`;
+export type SignupMutationFn = Apollo.MutationFunction<
+  SignupMutation,
+  SignupMutationVariables
+>;
 
 /**
  * __useSignupMutation__
@@ -63,30 +117,44 @@ export type SignupMutationFn = Apollo.MutationFunction<SignupMutation, SignupMut
  *   },
  * });
  */
-export function useSignupMutation(baseOptions?: Apollo.MutationHookOptions<SignupMutation, SignupMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<SignupMutation, SignupMutationVariables>(SignupDocument, options);
-      }
+export function useSignupMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    SignupMutation,
+    SignupMutationVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<SignupMutation, SignupMutationVariables>(
+    SignupDocument,
+    options
+  );
+}
 export type SignupMutationHookResult = ReturnType<typeof useSignupMutation>;
 export type SignupMutationResult = Apollo.MutationResult<SignupMutation>;
-export type SignupMutationOptions = Apollo.BaseMutationOptions<SignupMutation, SignupMutationVariables>;
+export type SignupMutationOptions = Apollo.BaseMutationOptions<
+  SignupMutation,
+  SignupMutationVariables
+>;
 export const ConfirmUserDocument = gql`
-    mutation ConfirmUser($confirmUserToken: String!) {
-  confirmUser(token: $confirmUserToken) {
-    userErrors {
-      message
-      values
-    }
-    token
-    user {
-      id
-      email
-      name
+  mutation ConfirmUser($confirmUserToken: String!) {
+    confirmUser(token: $confirmUserToken) {
+      userErrors {
+        message
+        values
+      }
+      token
+      user {
+        id
+        email
+        name
+      }
     }
   }
-}
-    `;
-export type ConfirmUserMutationFn = Apollo.MutationFunction<ConfirmUserMutation, ConfirmUserMutationVariables>;
+`;
+export type ConfirmUserMutationFn = Apollo.MutationFunction<
+  ConfirmUserMutation,
+  ConfirmUserMutationVariables
+>;
 
 /**
  * __useConfirmUserMutation__
@@ -105,25 +173,42 @@ export type ConfirmUserMutationFn = Apollo.MutationFunction<ConfirmUserMutation,
  *   },
  * });
  */
-export function useConfirmUserMutation(baseOptions?: Apollo.MutationHookOptions<ConfirmUserMutation, ConfirmUserMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<ConfirmUserMutation, ConfirmUserMutationVariables>(ConfirmUserDocument, options);
-      }
-export type ConfirmUserMutationHookResult = ReturnType<typeof useConfirmUserMutation>;
-export type ConfirmUserMutationResult = Apollo.MutationResult<ConfirmUserMutation>;
-export type ConfirmUserMutationOptions = Apollo.BaseMutationOptions<ConfirmUserMutation, ConfirmUserMutationVariables>;
-export const ConfirmResendDocument = gql`
-    mutation ConfirmResend($email: String!) {
-  confirmResend(email: $email) {
-    userErrors {
-      message
-      values
-    }
-    success
-  }
+export function useConfirmUserMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    ConfirmUserMutation,
+    ConfirmUserMutationVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<ConfirmUserMutation, ConfirmUserMutationVariables>(
+    ConfirmUserDocument,
+    options
+  );
 }
-    `;
-export type ConfirmResendMutationFn = Apollo.MutationFunction<ConfirmResendMutation, ConfirmResendMutationVariables>;
+export type ConfirmUserMutationHookResult = ReturnType<
+  typeof useConfirmUserMutation
+>;
+export type ConfirmUserMutationResult =
+  Apollo.MutationResult<ConfirmUserMutation>;
+export type ConfirmUserMutationOptions = Apollo.BaseMutationOptions<
+  ConfirmUserMutation,
+  ConfirmUserMutationVariables
+>;
+export const ConfirmResendDocument = gql`
+  mutation ConfirmResend($email: String!) {
+    confirmResend(email: $email) {
+      userErrors {
+        message
+        values
+      }
+      success
+    }
+  }
+`;
+export type ConfirmResendMutationFn = Apollo.MutationFunction<
+  ConfirmResendMutation,
+  ConfirmResendMutationVariables
+>;
 
 /**
  * __useConfirmResendMutation__
@@ -142,30 +227,47 @@ export type ConfirmResendMutationFn = Apollo.MutationFunction<ConfirmResendMutat
  *   },
  * });
  */
-export function useConfirmResendMutation(baseOptions?: Apollo.MutationHookOptions<ConfirmResendMutation, ConfirmResendMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<ConfirmResendMutation, ConfirmResendMutationVariables>(ConfirmResendDocument, options);
-      }
-export type ConfirmResendMutationHookResult = ReturnType<typeof useConfirmResendMutation>;
-export type ConfirmResendMutationResult = Apollo.MutationResult<ConfirmResendMutation>;
-export type ConfirmResendMutationOptions = Apollo.BaseMutationOptions<ConfirmResendMutation, ConfirmResendMutationVariables>;
+export function useConfirmResendMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    ConfirmResendMutation,
+    ConfirmResendMutationVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<
+    ConfirmResendMutation,
+    ConfirmResendMutationVariables
+  >(ConfirmResendDocument, options);
+}
+export type ConfirmResendMutationHookResult = ReturnType<
+  typeof useConfirmResendMutation
+>;
+export type ConfirmResendMutationResult =
+  Apollo.MutationResult<ConfirmResendMutation>;
+export type ConfirmResendMutationOptions = Apollo.BaseMutationOptions<
+  ConfirmResendMutation,
+  ConfirmResendMutationVariables
+>;
 export const SigninDocument = gql`
-    mutation Signin($signinInput: CredentialsInput!) {
-  signin(input: $signinInput) {
-    userErrors {
-      message
-      values
-    }
-    token
-    user {
-      id
-      email
-      name
+  mutation Signin($signinInput: CredentialsInput!) {
+    signin(input: $signinInput) {
+      userErrors {
+        message
+        values
+      }
+      token
+      user {
+        id
+        email
+        name
+      }
     }
   }
-}
-    `;
-export type SigninMutationFn = Apollo.MutationFunction<SigninMutation, SigninMutationVariables>;
+`;
+export type SigninMutationFn = Apollo.MutationFunction<
+  SigninMutation,
+  SigninMutationVariables
+>;
 
 /**
  * __useSigninMutation__
@@ -184,10 +286,21 @@ export type SigninMutationFn = Apollo.MutationFunction<SigninMutation, SigninMut
  *   },
  * });
  */
-export function useSigninMutation(baseOptions?: Apollo.MutationHookOptions<SigninMutation, SigninMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<SigninMutation, SigninMutationVariables>(SigninDocument, options);
-      }
+export function useSigninMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    SigninMutation,
+    SigninMutationVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<SigninMutation, SigninMutationVariables>(
+    SigninDocument,
+    options
+  );
+}
 export type SigninMutationHookResult = ReturnType<typeof useSigninMutation>;
 export type SigninMutationResult = Apollo.MutationResult<SigninMutation>;
-export type SigninMutationOptions = Apollo.BaseMutationOptions<SigninMutation, SigninMutationVariables>;
+export type SigninMutationOptions = Apollo.BaseMutationOptions<
+  SigninMutation,
+  SigninMutationVariables
+>;
