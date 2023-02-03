@@ -1,8 +1,12 @@
 import { AppBar, Box, Toolbar, Typography } from '@mui/material';
+import { useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { RoutePath } from '../../config/routes';
+import { AuthContext } from '../../context/auth-context';
 
 export const Navbar = () => {
+  const userContext = useContext(AuthContext);
+
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position='static'>

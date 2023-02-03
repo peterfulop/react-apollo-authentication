@@ -1,42 +1,76 @@
 import jwtDecode, { JwtPayload } from 'jwt-decode';
 import { createContext, useReducer } from 'react';
 
-type InitialState = {
-  user: string | null;
+type User = {
+  id: string;
+  name: string;
+  email: string;
+  token: string;
 };
+
+type InitialState = {
+  user: User;
+};
+
+type UserData = {
+  user: User;
+};
+
+enum Action {
+  LOGIN = 'LOGIN',
+  LOGOUT = 'LOGOUT',
+}
+
+type ActionTypes = {
+  type: Action;
+  payload?: {
+    user: User;
+  };
+};
+
 const initialState: InitialState = {
-  user: null,
+  user: {
+    id: '',
+    name: '',
+    email: '',
+    token: '',
+  },
 };
 
 const token = localStorage.getItem('token');
 
 if (token) {
-  const decodedToken = jwtDecode<JwtPayload>(token);
-
-  if (decodedToken.exp && decodedToken.exp * 1000 < Date.now()) {
+  try {
+    const decodedToken = jwtDecode<JwtPayload>(token);
+    if (decodedToken && Number(decodedToken?.exp) * 1000 > Date.now()) {
+      initialState.user.token = String(decodedToken);
+    } else {
+      localStorage.removeItem('token');
+    }
+  } catch (error) {
     localStorage.removeItem('token');
-  } else {
-    initialState.user = decodedToken as unknown as string;
   }
 }
 
 const AuthContext = createContext({
   user: null,
-  login: (userData: any) => {},
+  login: (_userData: UserData) => {},
   logout: () => {},
 });
 
-function authReducer(state: any, action: any) {
+function authReducer(state: InitialState, action: ActionTypes): InitialState {
   switch (action.type) {
     case 'LOGIN':
       return {
-        ...state,
-        user: action.payload,
+        user: {
+          token: action.payload?.user.token,
+          email: action.payload?.user.email,
+          id: action.payload?.user.id,
+        } as User,
       };
     case 'LOGOUT':
       return {
-        ...state,
-        user: null,
+        ...initialState,
       };
     default:
       return state;
@@ -46,14 +80,14 @@ function authReducer(state: any, action: any) {
 function AuthProvider(props: any) {
   const [state, dispatch] = useReducer(authReducer, initialState);
 
-  const login = (userData: any) => {
-    localStorage.setItem('token', userData.token);
-    dispatch({ type: 'LOGIN', payload: userData });
+  const login = (userData: UserData) => {
+    localStorage.setItem('token', userData.user.token);
+    dispatch({ type: Action.LOGIN, payload: { ...userData } });
   };
 
-  const logout = (userData: any) => {
+  const logout = () => {
     localStorage.remove('token');
-    dispatch({ type: 'LOGOUT' });
+    dispatch({ type: Action.LOGOUT });
   };
 
   return (

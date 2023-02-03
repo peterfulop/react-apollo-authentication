@@ -8,8 +8,6 @@ type ValidateInputs = {
 };
 
 export const Validate = async (input: ValidateInputs) => {
-  console.log('Run validation');
-
   const { token, callback } = input;
   try {
     const response = await client.mutate({
@@ -18,13 +16,9 @@ export const Validate = async (input: ValidateInputs) => {
         confirmUserToken: token as string,
       },
     });
-
     if (response.errors) {
-      //   console.log('ERROR');
-
       callback('Unable to validate.', null);
     }
-
     const { token: serverSideToken } = response.data.confirmUser;
     if (serverSideToken) {
       callback(null, serverSideToken);

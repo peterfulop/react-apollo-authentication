@@ -26,8 +26,7 @@ export const LoginPage: FC<ILoginpage> = () => {
     }
     if (res.data?.signin.token && res.data.signin.user) {
       const { token, user } = res.data.signin;
-      // userContext.userDispatch({ type: 'LOGIN', payload: { token, user } });
-      userContext.login({ token });
+      userContext.login({ user: { ...user, token } });
       navigate(RoutePath.PROFILE);
     }
   };
